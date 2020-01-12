@@ -1,4 +1,4 @@
-# nbdev template
+# Crypto Price Data
 
-Use this template to more easily create your nbdev project.
+Repo for storage and handling of BTC and BTC/altcoin price data for use in ML projects.
 
