@@ -1,11 +1,11 @@
 ---
 
-title: module name here
+title: OHLCV Preprocessing
 
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "API details."
+summary: "This module holds all the functions necessary to preprocess the ohlcv data in a dataframe. The goal is to calculate what the highest percentage change was over the following n days. This will serve as a prediction target for ML purposes."
 ---
 <!--
 
@@ -551,6 +551,7 @@ summary: "API details."
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">][</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -565,7 +566,157 @@ summary: "API details."
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>0.27</pre>
+<pre>2122</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">highs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">highs</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0       0.27000
+1       0.27000
+2       0.27000
+3       0.27000
+4       0.27000
+5       0.27000
+6       0.27000
+7       0.03500
+8       0.03500
+9       0.03150
+10      0.03000
+11      0.03000
+12      0.03000
+13      0.03000
+14      0.03000
+15      0.03000
+16      0.02950
+17      0.02930
+18      0.02930
+19      0.02930
+20      0.02929
+21      0.02929
+22      0.02880
+23      0.02880
+24      0.02880
+25      0.02880
+26      0.02880
+27      0.02880
+28      0.02880
+29      0.02880
+         ...   
+2092        NaN
+2093        NaN
+2094        NaN
+2095        NaN
+2096        NaN
+2097        NaN
+2098        NaN
+2099        NaN
+2100        NaN
+2101        NaN
+2102        NaN
+2103        NaN
+2104        NaN
+2105        NaN
+2106        NaN
+2107        NaN
+2108        NaN
+2109        NaN
+2110        NaN
+2111        NaN
+2112        NaN
+2113        NaN
+2114        NaN
+2115        NaN
+2116        NaN
+2117        NaN
+2118        NaN
+2119        NaN
+2120        NaN
+2121        NaN
+Name: H, Length: 2122, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>Calculates the highest percentage change in the next n days compared to the close ('C').</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">high_pct_change</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="n">highs</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">pcts</span> <span class="o">=</span> <span class="n">highs</span><span class="o">/</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">pcts</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pcts</span> <span class="o">=</span> <span class="n">high_pct_change</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">pcts</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0     9.629921
+1     9.693069
+2     9.693069
+3     9.000000
+4    25.973135
+dtype: float64</pre>
 </div>
 
 </div>

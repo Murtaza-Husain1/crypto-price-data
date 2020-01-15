@@ -1,6 +1,6 @@
 {
   "crypto_price_data": {
     "Overview": "/",
-    "module name here": "/core"
+    "OHLCV Preprocessing": "/core"
   }
 }
